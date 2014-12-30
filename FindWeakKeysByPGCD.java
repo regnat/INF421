@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.lang.String;
 import java.util.HashSet;
 import java.util.Set;
+import fileParser.FileParser;
 
 class FindWeakKeysByPGCD {
   private static String outFile = "weakKeys.txt";
@@ -21,30 +22,6 @@ class FindWeakKeysByPGCD {
     else {
       FindWeakKeysByPGCD("../files/keys100.txt");
     }
-  }
-
-  static int getLineCount(String fileToCount) throws IOException {
-    int lineCount = 0;
-    Scanner scanner = new Scanner(Paths.get(fileToCount));
-    while (scanner.hasNextLine()) {
-      scanner.nextLine();
-      lineCount++;
-    }
-    scanner.close();
-    return lineCount;
-  }
-
-  static BigInteger[] parseKeysFile(String keysFile) throws IOException {
-    Scanner scanner = new Scanner(Paths.get(keysFile));
-    int lineCount = getLineCount(keysFile);
-    BigInteger[] keys = new BigInteger[lineCount];
-    for (int i=0; i<lineCount; i++) {
-      scanner.findInLine(":");
-      keys[i] = scanner.nextBigInteger();
-      scanner.nextLine();
-    }
-    scanner.close();
-    return keys;
   }
 
   static void addToWeakKeys(BigInteger key, BigInteger pgcd, Set<BigInteger> knownWeakKeys) {
@@ -66,7 +43,7 @@ class FindWeakKeysByPGCD {
 
   static void FindWeakKeysByPGCD(String keysFile) {
     try {
-      BigInteger[] keys = parseKeysFile(keysFile);
+      BigInteger[] keys = FileParser.parseKeysFile(keysFile);
       BigInteger pgcd = null;
       Set<BigInteger> knownWeakKeys = new HashSet<BigInteger>();
       for (int i=0; i < keys.length; i++) {

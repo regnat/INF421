@@ -1,0 +1,54 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BigIntTree	ProductTree.java	/^	public BigIntTree(BigIntTree l, BigIntTree r, BigInteger v) {$/;"	m	class:BigIntTree
+BigIntTree	ProductTree.java	/^	public BigIntTree(BigInteger v) {$/;"	m	class:BigIntTree
+BigIntTree	ProductTree.java	/^class BigIntTree {$/;"	c
+BuildFromLeafs	ProductTree.java	/^	public static ProductTree BuildFromLeafs(LinkedList<BigInteger> leafs){$/;"	m	class:ProductTree
+ComputePrivateKey	ComputePrivateKey.java	/^  static void ComputePrivateKey(BigInteger p, BigInteger q, BigInteger exp) {$/;"	m	class:ComputePrivateKey
+ComputePrivateKey	ComputePrivateKey.java	/^class ComputePrivateKey {$/;"	c
+FileParser	fileParser/FileParser.java	/^public class FileParser {$/;"	c
+FindWeakKeysByPGCD	FindWeakKeysByPGCD.java	/^  static void FindWeakKeysByPGCD(String keysFile) {$/;"	m	class:FindWeakKeysByPGCD
+FindWeakKeysByPGCD	FindWeakKeysByPGCD.java	/^class FindWeakKeysByPGCD {$/;"	c
+FindWeakKeysByProductTrees	BigIntTree.java	/^public class FindWeakKeysByProductTrees {$/;"	c
+FindWeakKeysByProductTrees	FindWeakKeysByProductTrees.java	/^public class FindWeakKeysByProductTrees {$/;"	c
+FindWeakKeysList	BigIntTree.java	/^	public static HashSet<BigInteger> FindWeakKeysList(LinkedList<BigInteger> keys){$/;"	m	class:FindWeakKeysByProductTrees
+FindWeakKeysList	FindWeakKeysByProductTrees.java	/^  public static HashSet<BigInteger> FindWeakKeysList(LinkedList<BigInteger> keys){$/;"	m	class:FindWeakKeysByProductTrees
+FindWeakKeysTree	BigIntTree.java	/^	public static HashSet<BigInteger> FindWeakKeysTree(LinkedList<BigInteger> keys){$/;"	m	class:FindWeakKeysByProductTrees
+FindWeakKeysTree	FindWeakKeysByProductTrees.java	/^  public static HashSet<BigInteger> FindWeakKeysTree(LinkedList<BigInteger> keys){$/;"	m	class:FindWeakKeysByProductTrees
+ProductTree	ProductTree.java	/^	public ProductTree(BigInteger v) {$/;"	m	class:ProductTree
+ProductTree	ProductTree.java	/^	public ProductTree(ProductTree l, ProductTree r) {$/;"	m	class:ProductTree
+ProductTree	ProductTree.java	/^public class ProductTree extends BigIntTree {$/;"	c
+addToWeakKeys	FindWeakKeysByPGCD.java	/^  static void addToWeakKeys(BigInteger key, BigInteger pgcd, Set<BigInteger> knownWeakKeys) {$/;"	m	class:FindWeakKeysByPGCD
+buildLeftoverList	ProductTree.java	/^	public LinkedList<BigInteger> buildLeftoverList() {$/;"	m	class:ProductTree
+buildLeftoverListAux	ProductTree.java	/^	private void buildLeftoverListAux (LinkedList<BigInteger> res, BigInteger leftover){$/;"	m	class:ProductTree	file:
+buildLeftoverTree	ProductTree.java	/^	public BigIntTree buildLeftoverTree() {$/;"	m	class:ProductTree
+buildLeftoverTreeAux	ProductTree.java	/^	private BigIntTree buildLeftoverTreeAux(BigInteger leftover){$/;"	m	class:ProductTree	file:
+fileParser	fileParser/FileParser.java	/^package fileParser;$/;"	p
+getLineCount	fileParser/FileParser.java	/^  static int getLineCount(String fileToCount) throws IOException {$/;"	m	class:FileParser
+getVal	ProductTree.java	/^	public BigInteger getVal(){$/;"	m	class:BigIntTree
+getlSubTree	ProductTree.java	/^	public BigIntTree getlSubTree(){$/;"	m	class:BigIntTree
+getlSubTree	ProductTree.java	/^	public ProductTree getlSubTree(){$/;"	m	class:ProductTree
+getrSubTree	ProductTree.java	/^	public BigIntTree getrSubTree(){$/;"	m	class:BigIntTree
+getrSubTree	ProductTree.java	/^	public ProductTree getrSubTree(){$/;"	m	class:ProductTree
+keysFromFile	BigIntTree.java	/^	public static LinkedList<BigInteger> keysFromFile(String path){$/;"	m	class:FindWeakKeysByProductTrees
+keysFromFile	FindWeakKeysByProductTrees.java	/^  public static LinkedList<BigInteger> keysFromFile(String path){$/;"	m	class:FindWeakKeysByProductTrees
+lSubTree	ProductTree.java	/^	private BigIntTree lSubTree;$/;"	f	class:BigIntTree	file:
+main	BigIntTree.java	/^	public static void main(String[] args) {$/;"	m	class:FindWeakKeysByProductTrees
+main	ComputePrivateKey.java	/^  public static void main (String[] args) {$/;"	m	class:ComputePrivateKey
+main	FindWeakKeysByPGCD.java	/^  public static void main (String[] args) {$/;"	m	class:FindWeakKeysByPGCD
+main	FindWeakKeysByProductTrees.java	/^  public static void main(String[] args) {$/;"	m	class:FindWeakKeysByProductTrees
+outFile	FindWeakKeysByPGCD.java	/^  private static String outFile = "weakKeys.txt";$/;"	f	class:FindWeakKeysByPGCD	file:
+parseKeysFile	fileParser/FileParser.java	/^  public static BigInteger[] parseKeysFile(String keysFile) throws IOException {$/;"	m	class:FileParser
+printAsn1	ComputePrivateKey.java	/^  static private void printAsn1($/;"	m	class:ComputePrivateKey	file:
+rSubTree	ProductTree.java	/^	private BigIntTree rSubTree;$/;"	f	class:BigIntTree	file:
+solveLeftoverList	BigIntTree.java	/^	private static void solveLeftoverList(HashSet<BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){$/;"	m	class:FindWeakKeysByProductTrees	file:
+solveLeftoverList	FindWeakKeysByProductTrees.java	/^  private static void solveLeftoverList(HashSet<BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){$/;"	m	class:FindWeakKeysByProductTrees	file:
+solveLeftoverTree	BigIntTree.java	/^	private static void solveLeftoverTree(HashSet<BigInteger> factors, ProductTree pTree, BigIntTree lTree){$/;"	m	class:FindWeakKeysByProductTrees	file:
+solveLeftoverTree	FindWeakKeysByProductTrees.java	/^  private static void solveLeftoverTree(HashSet<BigInteger> factors, ProductTree pTree, BigIntTree lTree){$/;"	m	class:FindWeakKeysByProductTrees	file:
+toString	ProductTree.java	/^	public String toString(){$/;"	m	class:BigIntTree
+toStringAux	ProductTree.java	/^	private void toStringAux(StringBuilder s, int i){$/;"	m	class:BigIntTree	file:
+val	ProductTree.java	/^	protected BigInteger val;$/;"	f	class:BigIntTree
