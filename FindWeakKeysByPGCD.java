@@ -15,7 +15,9 @@ import java.util.LinkedList;
 import fileParser.FileParser;
 
 class FindWeakKeysByPGCD {
+
   private static String outFile = "weakKeys.txt";
+
   public static void main (String[] args) {
     if (args.length > 0) {
       FindWeakKeysByPGCD(args[0]);
@@ -25,6 +27,9 @@ class FindWeakKeysByPGCD {
     }
   }
 
+  /**
+   * Adds the two give keys to the file containing the weak keys
+   */
   static void addToWeakKeys(BigInteger key, BigInteger pgcd, Set<BigInteger> knownWeakKeys) {
     if (!knownWeakKeys.contains(key)) {
       try {
@@ -42,6 +47,9 @@ class FindWeakKeysByPGCD {
     }
   }
 
+  /**
+   * Compute GCDs between keys to find common prime factors
+   */
   static void FindWeakKeysByPGCD(String keysFile) {
     try {
       LinkedList<BigInteger> keys = FileParser.parseKeysFile(keysFile);
