@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.LinkedList;
+import fileParser.FileParser;
+import java.io.IOException;
 
 
 public class FindWeakKeysByProductTrees {
@@ -37,8 +39,10 @@ public class FindWeakKeysByProductTrees {
     return factors;
   }
 
-  //Recursive auxiliary function wrapped in FindWeakKeysTree.
-  //Depth first walk in the two trees in order to get the gcd.
+  /**
+   * Recursive auxiliary function wrapped in FindWeakKeysTree.
+   * Depth first walk in the two trees in order to get the gcd.
+   */
   private static void solveLeftoverTree(HashSet<BigInteger> factors, ProductTree pTree, BigIntTree lTree){
 
     //If a leftover is null, we can't find any factor on the branch
@@ -87,9 +91,12 @@ public class FindWeakKeysByProductTrees {
     return factors;
   }
 
-  //Recursive auxiliary function wrapped in FindWeakKeys.
-  //Depth first walk in pTree in order to get the gcd with the corresponding rest of lList.
-  //Warning : modify (destroy, actually) lList
+  /**
+   *
+   * Recursive auxiliary function wrapped in FindWeakKeys.
+   * Depth first walk in pTree in order to get the gcd with the corresponding rest of lList.
+   * Warning : modify (destroy, actually) lList
+   */
   private static void solveLeftoverList(HashSet<BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){
 
     //Depth first walk in pTree
@@ -109,46 +116,23 @@ public class FindWeakKeysByProductTrees {
     }
   }
 
-  /**
-   * 
-   * Read the keys on the file located at path
-   * 
-   */
-  public static LinkedList<BigInteger> keysFromFile(String path){
-
-    LinkedList<BigInteger> keys = new LinkedList<>();
-
-    try{
-      InputStream flux=new FileInputStream(path);
-      InputStreamReader lecture=new InputStreamReader(flux);
-      BufferedReader buff=new BufferedReader(lecture);
-      String ligne;
-
-      //Seule une ligne sur deux contient une clef, le fichier à une nombre de ligne paire
-      while ((ligne=buff.readLine()) != null){
-        keys.add(new BigInteger(ligne.substring(ligne.indexOf(":")+2)));
-      }
-      buff.close(); 
-    }
-    catch (Exception e){
-      System.out.println(e.toString());
-    }
-
-    return keys;
-  }
-
   public static void main(String[] args) {
 
     String path = "../files/keys1000.txt";
     if (args.length > 0) {
       path = args[0];
     }
-    LinkedList<BigInteger> keys = keysFromFile(path);
-    System.out.println("Calculating the common factors... ");
-    HashSet<BigInteger> factors = FindWeakKeysList(keys);
-    System.out.println("Done.");
-
-    System.out.println("\n" + factors.size() + " factors found");
+    /* LinkedList<BigInteger> keys = keysFromFile(path); */
+    try {
+      LinkedList<BigInteger> keys = FileParser.parseKeysFile(path);
+      System.out.println("Calculating the common factors... ");
+      HashSet<BigInteger> factors = FindWeakKeysList(keys);
+      System.out.println("Done.");
+      System.out.println("\n" + factors.size() + " factors found");
+    }
+    catch ( IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

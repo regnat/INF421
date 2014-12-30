@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.lang.String;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.LinkedList;
 import fileParser.FileParser;
 
 class FindWeakKeysByPGCD {
@@ -43,15 +44,17 @@ class FindWeakKeysByPGCD {
 
   static void FindWeakKeysByPGCD(String keysFile) {
     try {
-      BigInteger[] keys = FileParser.parseKeysFile(keysFile);
+      LinkedList<BigInteger> keys = FileParser.parseKeysFile(keysFile);
+      LinkedList<BigInteger> keys2 = new LinkedList<BigInteger>(keys);
       BigInteger pgcd = null;
       Set<BigInteger> knownWeakKeys = new HashSet<BigInteger>();
-      for (int i=0; i < keys.length; i++) {
-        for (int j=i+1; j < keys.length; j++) {
-          pgcd = keys[i].gcd(keys[j]);
+      for (BigInteger key1 : keys) {
+        keys2.poll();
+        for (BigInteger key2 : keys2) {
+          pgcd = key1.gcd(key2);
           if (!pgcd.equals(BigInteger.ONE)) {
-            addToWeakKeys(keys[i], pgcd, knownWeakKeys);
-            addToWeakKeys(keys[j], pgcd, knownWeakKeys);
+            addToWeakKeys(key1, pgcd, knownWeakKeys);
+            addToWeakKeys(key2, pgcd, knownWeakKeys);
           }
         }
       }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 
 public class FileParser {
   static int getLineCount(String fileToCount) throws IOException {
@@ -22,16 +23,19 @@ public class FileParser {
     return lineCount;
   }
 
-  public static BigInteger[] parseKeysFile(String keysFile) throws IOException {
+  public static LinkedList<BigInteger> parseKeysFile(String keysFile) throws IOException {
+    System.out.print("Reading the keys from " + keysFile + "... ");
     Scanner scanner = new Scanner(Paths.get(keysFile));
-    int lineCount = getLineCount(keysFile);
-    BigInteger[] keys = new BigInteger[lineCount];
-    for (int i=0; i<lineCount; i++) {
+    /* int lineCount = getLineCount(keysFile); */
+    /* BigInteger[] keys = new BigInteger[lineCount]; */
+    LinkedList<BigInteger> keys = new LinkedList<BigInteger>();
+    while (scanner.hasNextLine()) {
       scanner.findInLine(":");
-      keys[i] = scanner.nextBigInteger();
+      keys.add(scanner.nextBigInteger());
       scanner.nextLine();
     }
     scanner.close();
+    System.out.println("Done.");
     return keys;
   }
 }
