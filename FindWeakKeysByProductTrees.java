@@ -3,14 +3,14 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.util.HashSet;
 import java.util.LinkedList;
-import fileParser.FileParser;
+import java.util.HashMap;
 import java.io.IOException;
 
 
 public class FindWeakKeysByProductTrees {
 
+  static String outFile = "weakKeys.txt";
   /**
    * 
    * Looks for the common factor of keys in "keys"
@@ -19,7 +19,7 @@ public class FindWeakKeysByProductTrees {
    * Return a set (we don't want twice the same factor...
    * 
    */
-  public static HashSet<BigInteger> FindWeakKeysTree(LinkedList<BigInteger> keys){
+  public static LinkedList<BigInteger> FindWeakKeysTree(LinkedList<BigInteger> keys){
 
     //Build the product tree and the leftover tree
     System.out.print("--> Building the product tree... ");
@@ -32,7 +32,7 @@ public class FindWeakKeysByProductTrees {
 
     //Look for common factor
     System.out.print("--> Looking for common factor... ");
-    HashSet<BigInteger> factors = new HashSet<BigInteger>();
+    LinkedList<BigInteger> factors = new LinkedList<BigInteger>();
     solveLeftoverTree(factors, pTree, lTree);
     System.out.println("Done");
 
@@ -43,7 +43,7 @@ public class FindWeakKeysByProductTrees {
    * Recursive auxiliary function wrapped in FindWeakKeysTree.
    * Depth first walk in the two trees in order to get the gcd.
    */
-  private static void solveLeftoverTree(HashSet<BigInteger> factors, ProductTree pTree, BigIntTree lTree){
+  private static void solveLeftoverTree(LinkedList<BigInteger> factors, ProductTree pTree, BigIntTree lTree){
 
     //If a leftover is null, we can't find any factor on the branch
     if(lTree.getVal().equals(BigInteger.ZERO)){
@@ -71,9 +71,10 @@ public class FindWeakKeysByProductTrees {
    * Return a set (we don't want twice the same factor...
    * 
    */
-  public static HashSet<BigInteger> FindWeakKeysList(LinkedList<BigInteger> keys){
+  public static HashMap<BigInteger, BigInteger> FindWeakKeysList(LinkedList<BigInteger> keys){
 
     //Build the product tree and the leftover list
+    System.out.println("Calculating the common factors... ");
     System.out.print("--> Building the product tree... ");
     ProductTree pTree = ProductTree.BuildFromLeafs(keys);
     System.out.println("Done.");
@@ -82,10 +83,13 @@ public class FindWeakKeysByProductTrees {
     System.out.println("Done.");
 
     //Look for common factor
-    HashSet<BigInteger> factors = new HashSet<>();
+    HashMap<BigInteger, BigInteger> factors = new HashMap<BigInteger, BigInteger>();
 
     System.out.print("--> Looking for common factor... ");
-    solveLeftoverList(factors, pTree, lList);
+    computeFactors(factors, pTree, lList);
+    System.out.println("Done.");
+    System.out.print("--> Saving found prime factors to file");
+    KeyWriter.addToWeakKeys(outFile, factors);
     System.out.println("Done.");
 
     return factors;
@@ -97,22 +101,21 @@ public class FindWeakKeysByProductTrees {
    * Depth first walk in pTree in order to get the gcd with the corresponding rest of lList.
    * Warning : modify (destroy, actually) lList
    */
-  private static void solveLeftoverList(HashSet<BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){
+  private static void computeFactors(HashMap<BigInteger, BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){
 
     //Depth first walk in pTree
     if(pTree.getlSubTree() != null){
-      solveLeftoverList(factors, pTree.getlSubTree(), lList);
-      solveLeftoverList(factors, pTree.getrSubTree(), lList);
+      computeFactors(factors, pTree.getlSubTree(), lList);
+      computeFactors(factors, pTree.getrSubTree(), lList);
     }
-    //If on a leaf, calculate the biggest common factor and keep it if different from 1.
+    //If on a leaf, calculate the biggest common factor (if we are not null)
     else{
       BigInteger n = lList.pop();
-      //Get rid of useless rests
-      if(!n.equals(BigInteger.ZERO)){
-        n = n.divide(pTree.getVal()).gcd(pTree.getVal());
-        if(!n.equals(BigInteger.ONE))
-          factors.add(n);
+      n = n.divide(pTree.getVal()).gcd(pTree.getVal());
+      if (n.equals(pTree.getVal())) {
+        n = BigInteger.ZERO;
       }
+      factors.put(pTree.getVal(),n);
     }
   }
 
@@ -125,10 +128,7 @@ public class FindWeakKeysByProductTrees {
     /* LinkedList<BigInteger> keys = keysFromFile(path); */
     try {
       LinkedList<BigInteger> keys = FileParser.parseKeysFile(path);
-      System.out.println("Calculating the common factors... ");
-      HashSet<BigInteger> factors = FindWeakKeysList(keys);
-      System.out.println("Done.");
-      System.out.println("\n" + factors.size() + " factors found");
+      HashMap<BigInteger, BigInteger> factors = FindWeakKeysList(keys);
     }
     catch ( IOException e) {
       e.printStackTrace();

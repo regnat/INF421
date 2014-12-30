@@ -1,5 +1,3 @@
-package fileParser;
-
 /*
  * FileParser.java
  * Common utils to parse key files
