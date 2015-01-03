@@ -100,7 +100,7 @@ public class FindWeakKeysByProductTrees {
 
     factorsAt0 = FindWeakKeysByPGCD.computeGCDs(zeroList, weakKeysList);
     System.out.println("Done.");
-    System.out.print("--> Saving found prime factors to file");
+    System.out.print("--> Saving found prime factors to file " + outFile + "... ");
     factors.putAll(factorsAt0);
     KeyWriter.addToWeakKeys(outFile, factors);
     System.out.println("Done.");
@@ -134,7 +134,7 @@ public class FindWeakKeysByProductTrees {
 
   public static void main(String[] args) {
 
-    String path = "../files/keys1000.txt";
+    String path = "./files/keys100.txt";
     if (args.length > 0) {
       path = args[0];
     }
