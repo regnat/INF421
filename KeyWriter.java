@@ -16,7 +16,7 @@ public class KeyWriter {
   private static void addToWeakKeys(String outFile, BigInteger key, BigInteger pgcd) {
     try {
       FileWriter writer = new FileWriter(outFile, true);
-      writer.write(String.format("%s  == %s * %s\n", key.toString(), pgcd.toString(), key.divide(pgcd).toString()));
+      writer.write(String.format("%s  == %s x %s\n", key.toString(), pgcd.toString(), key.divide(pgcd).toString()));
       writer.close();
     }
     catch (IOException e) {

@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.Map;
 import java.io.IOException;
 
 
@@ -76,15 +77,31 @@ public class FindWeakKeysByProductTrees {
     System.out.println("Done.");
     System.out.print("--> Building the leftover list... ");
     LinkedList<BigInteger> lList = pTree.buildLeftoverList();
+    LinkedList<BigInteger> weakKeysList = new LinkedList<BigInteger>();
+    LinkedList<BigInteger> zeroList = new LinkedList<BigInteger>();
     System.out.println("Done.");
 
     //Look for common factor
     HashMap<BigInteger, BigInteger> factors = new HashMap<BigInteger, BigInteger>();
+    HashMap<BigInteger, BigInteger> factorsAt0 = new HashMap<BigInteger, BigInteger>();
 
     System.out.print("--> Looking for common factor... ");
     computeFactors(factors, pTree, lList);
+
+    System.out.print("--> Looking for still unfound but foundable factors... ");
+    for(Map.Entry<BigInteger, BigInteger> entry : factors.entrySet()) {
+        if (entry.getValue().equals(BigInteger.ONE)) {
+            weakKeysList.add(entry.getKey());
+            if (entry.getValue().equals(BigInteger.ZERO)) {
+                zeroList.add(entry.getKey());
+            }
+        }
+    }
+
+    factorsAt0 = FindWeakKeysByPGCD.computeGCDs(zeroList, weakKeysList);
     System.out.println("Done.");
     System.out.print("--> Saving found prime factors to file");
+    factors.putAll(factorsAt0);
     KeyWriter.addToWeakKeys(outFile, factors);
     System.out.println("Done.");
 
