@@ -17,8 +17,17 @@
 \end{abstract}
 
 \section{Mise en palce : une implémentation jouet de RSA}
+
 \section{Recherche naïve : algorithme d'Euclide et exploration paire par paire}
+
 \section{Arbres des produits et des restes}
+
+  \subsection{Construction de l'arbre des produits}
+  On construit l'arbre à partir des feuilles de manière simple en utilisant une file. On insère les feuilles dans cette dernière, et tant qu'elle contient plus d'un élément, on retire les deux éléments en têtes, on les réunit dans un même sous-arbre que l'on ajoute à la file.
+  L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grace à l'invariant : à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
+  
+  
+
 \section{Multiplication et pgcd rapides}
 
 \end{document}
