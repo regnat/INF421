@@ -32,7 +32,7 @@
   On construit l'arbre à partir des feuilles de manière simple en utilisant une file. On insère les feuilles dans cette dernière, et tant qu'elle contient plus d'un élément, on retire les deux éléments en têtes, on les réunit dans un même sous-arbre que l'on ajoute à la file.
   L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grace à l'invariant : à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
   
-  \subsection{Complexité de la construction de l'arbre}
+  \subsection{Complexité de la construction de l'arbre des produits}
   Nous avons en entrée $N$ clés, ayant au plus $m$ chiffres.
   On ne calculera la complexité qu'en nombre de multiplications, cette opération étant la plus représentative de la construction de l'arbre des produits.
   Supposons que le nombre $N$ de clés en entrée est de la forme $2^k$, avec $k\in\mathbf{N}$.
@@ -45,7 +45,7 @@
   Les nombres de l'étage $i$ ont donc au plus $2^{i-1}m$ chiffres, par une récurence immédiate.
   Les $2^{k-i}$ multiplications de de l'étage $i$ ont donc une complexité en $CM(2^{i-1}m)$.
   
-  D'où une complexité totale : $C(2^k) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$.
+  D'où une complexité totale : $C(2^k,m) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$.
   
   Donc si $CM(m) = O(m^2)$ :
   \begin{eqnarray*}
@@ -56,8 +56,33 @@
   \end{eqnarray*}
   
   D'où $C(N,m) = O(N^2m^2)$, ce qui se prolonge pour toute valeur de $N$, puisque le cas d'un arbre complet est celui pour lequel le plus de multiplications sont nécessaires.
+  
+  Et si $CM(m) = O(mlog(m)log(log(m)))$ :
+  \begin{eqnarray*}
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}mlog(2^{i-1}m)log(log(2^{i-1}m)))\\
+   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(log(m)+i-1)log(log(m)+i-1)\\
+   &\leq& \alpha 2^k m log(log(m)+k)(k log(m) + \frac{k-1}{2}*k\\
+   &\leq& \alpha 2^k m log(log(m)+k)(klog(m)+k^2)
+  \end{eqnarray*}
+  
+  D'où $C(N) = O(Nmlog(N)log(Nm)log(log(Nm)))$.
+  
+  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes : $log(N)log(Nm)log(log(Nm))$.
 
 
+  \subsection{Construction de l'ardre des restes}
+  On construit alors l'arbre des restes (on peut décider de ne construire que ses feuilles, nous avons implémenté les deux versions) en faisant un parcours en profondeur de l'arbre des produit et en calculant le reste à chaque étape.
+  
+  \subsection{Complexité de la construction de l'arbre des restes}
+  On reprends les même notations que précedemment et on suppose à nouveaux que $N$ est de la forme $2^k$, avec $k\in\mathbf{N}$.
+  On observe tout d'abord que pour la construction de l'arbre des restes, on fait une division euclidienne par noeud de l'arbre, ainsi qu'une multiplcation (qu'on néglige dans le calcul de la complexité, puisque celà revient à modifier la constante devant la complexité de la division) pour obtenir le diviseur. Celui-ci est le carré d'un nombre de l'étage $i$ de l'arbre des produits si on est en train de construire l'étage $i$ de l'arbre des restes, il a donc au plus $2x2^{i-1}m$ chiffres. Les restes de l'étage $i$ ont donc au plus $2^im$ chiffres.
+  Lors du calcul d'un reste de l'étage $i$, on divise donc un nombre d'au plus $2^{i+1}m$ chiffre par un nombre en ayant au plus $2^im$, ce qui se fait donc en complxité $CD(2^{i+1}m)$, et il y a $2^{k-i}$ divisions à faire par étage.
+  
+  D'où une complexité totale : $C(2^k, m) = \sum_{i=0}^{k-1}2^{k-i}CD(2^{i+1}m)$.
+  
+  On retrouve à une constante près l'expression obtenue pour le calcul de la complexité de la construction de l'arbre des produits, le résultat est donc identique.
+  On a donc $C(N,m) = O(N^2m^2)$ si $CD(m) = O(m^2)$ et $C(N) = O(Nmlog(N)log(Nm)log(log(Nm)))$ si $CD(m) = O(mlog(m)log(log(m)))$.
+  
 
 \section{Multiplication et pgcd rapides}
 
