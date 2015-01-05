@@ -2,6 +2,12 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
 \usepackage[french]{babel}
 
 %opening
@@ -26,7 +32,32 @@
   On construit l'arbre à partir des feuilles de manière simple en utilisant une file. On insère les feuilles dans cette dernière, et tant qu'elle contient plus d'un élément, on retire les deux éléments en têtes, on les réunit dans un même sous-arbre que l'on ajoute à la file.
   L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grace à l'invariant : à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
   
+  \subsection{Complexité de la construction de l'arbre}
+  Nous avons en entrée $N$ clés, ayant au plus $m$ chiffres.
+  On ne calculera la complexité qu'en nombre de multiplications, cette opération étant la plus représentative de la construction de l'arbre des produits.
+  Supposons que le nombre $N$ de clés en entrée est de la forme $2^k$, avec $k\in\mathbf{N}$.
   
+  Notons $C(N,m)$ la complexité de la construction de l'arbre, et $CM(m)$ la complexité de la multiplication de deux nombres de $m$ chiffres.
+  
+  À chaque étage de l'arbre à l'exception des feuilles, on va réaliser autant de multiplication que noeuds présents à cet étage, soit $2^{k-i}$ pour l'étage $i$, ou l'étage $0$ réprésente les feuilles.
+  
+  De plus, le produit de deux nombres a au plus pour nombre de chiffre la somme des chiffres de ses facteurs.
+  Les nombres de l'étage $i$ ont donc au plus $2^{i-1}m$ chiffres, par une récurence immédiate.
+  Les $2^{k-i}$ multiplications de de l'étage $i$ ont donc une complexité en $CM(2^{i-1}m)$.
+  
+  D'où une complexité totale : $C(2^k) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$.
+  
+  Donc si $CM(m) = O(m^2)$ :
+  \begin{eqnarray*}
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O((2^{i-1}m)^2)\\
+   &=& O(2^{k-2}m^2\sum_{i=1}^k 2^i)\\
+   &=& O(2^k m^2 2^k)\\
+   &=& O(2^{2k} m^2)
+  \end{eqnarray*}
+  
+  D'où $C(N,m) = O(N^2m^2)$, ce qui se prolonge pour toute valeur de $N$, puisque le cas d'un arbre complet est celui pour lequel le plus de multiplications sont nécessaires.
+
+
 
 \section{Multiplication et pgcd rapides}
 
