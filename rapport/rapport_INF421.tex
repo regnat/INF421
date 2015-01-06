@@ -8,7 +8,7 @@
 \usepackage{amssymb}
 \usepackage{mathrsfs}
 
-\usepackage[french]{babel}
+\usepackage[frenchb]{babel}
 
 %opening
 \title{Projet INF421 \\ À la recherche de clés secrètes vulnérables}
@@ -23,7 +23,7 @@
 \end{abstract}
 
 \section{Mise en place~: une implémentation jouet de RSA}
-En factorisant à la main la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier minisecret.txt ().
+En factorisant à la main la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier \texttt{minisecret.txt} ().
 \section{Recherche naïve~: algorithme d'Euclide et exploration paire par paire}
 Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble des clés vulnérables, et pour chacune un de leurs coefficients, ce qui nécessite un calcul de $\frac{n(n-1)}{2}$ pgcds (soit une complexité quadratique en le nombre de clés).
 
@@ -113,6 +113,8 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   
   Pour factoriser ces clés, qui partagent des facteurs communs mais ne sont pas factorisable par l'algorithme de l'arbre des restes, nous calculons donc l'ensemble des pgcd entre les clés ayant données un reste nul et les clefs dont le pgcd était différent de $1$ (et qui ont donc un facteur commun). Cette méthode a une complexité quadratique en le nombre de clef dans le pire des cas, ou toutes les clés feraient partie de cycle. En pratique, étant donné le faible nombre de clés présentes dans des cycles, cette méthode reste efficace.
   
+  \subsection{Déchiffrage du message}
+  Une boucle en shell permet ensuite de teste toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssh. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! fit-il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
 
 \section{Multiplication et pgcd rapides}
 
