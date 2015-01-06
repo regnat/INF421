@@ -22,15 +22,17 @@
 
 \end{abstract}
 
-\section{Mise en palce : une implémentation jouet de RSA}
+\section{Mise en place~: une implémentation jouet de RSA}
+En factorisant à la main la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier minisecret.txt ().
+\section{Recherche naïve~: algorithme d'Euclide et exploration paire par paire}
+Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble des clés vulnérables, et pour chacune un de leurs coefficients, ce qui nécessite un calcul de $\frac{n(n-1)}{2}$ pgcds (soit une complexité quadratique en le nombre de clés).
 
-\section{Recherche naïve : algorithme d'Euclide et exploration paire par paire}
-
+  Deux calculs sur cinq cent et mille clés nécessitent respectivement 11 et 41 secondes, ce qui confirme la complexité quadratique.
 \section{Arbres des produits et des restes}
 
   \subsection{Construction de l'arbre des produits}
   On construit l'arbre à partir des feuilles de manière simple en utilisant une file. On insère les feuilles dans cette dernière, et tant qu'elle contient plus d'un élément, on retire les deux éléments en têtes, on les réunit dans un même sous-arbre que l'on ajoute à la file.
-  L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grace à l'invariant : à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
+  L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grâce à l'invariant~: à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
   
   \subsection{Complexité de la construction de l'arbre des produits}
   Nous avons en entrée $N$ clés, ayant au plus $m$ chiffres.
@@ -39,17 +41,17 @@
   
   Notons $C(N,m)$ la complexité de la construction de l'arbre, et $CM(m)$ la complexité de la multiplication de deux nombres de $m$ chiffres.
   
-  À chaque étage de l'arbre à l'exception des feuilles, on va réaliser autant de multiplication que noeuds présents à cet étage, soit $2^{k-i}$ pour l'étage $i$, ou l'étage $0$ réprésente les feuilles.
+  À chaque étage de l'arbre à l'exception des feuilles, on va réaliser autant de multiplication que nœuds présents à cet étage, soit $2^{k-i}$ pour l'étage $i$, ou l'étage $0$ représente les feuilles.
   
   De plus, le produit de deux nombres a au plus pour nombre de chiffre la somme des chiffres de ses facteurs.
-  Les nombres de l'étage $i$ ont donc au plus $2^{i-1}m$ chiffres, par une récurence immédiate.
+  Les nombres de l'étage $i$ ont donc au plus $2^{i-1}m$ chiffres, par une récurrence immédiate.
   Les $2^{k-i}$ multiplications de de l'étage $i$ ont donc une complexité en $CM(2^{i-1}m)$.
   
-  D'où une complexité totale : $C(2^k,m) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$.
+  D'où une complexité totale~: $C(2^k,m) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$.
   
-  Donc si $CM(m) = O(m^2)$ :
+  Donc si $CM(m) = O(m^2)$~:
   \begin{eqnarray*}
-   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O((2^{i-1}m)^2)\\
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O({(2^{i-1}m)}^2)\\
    &=& O(2^{k-2}m^2\sum_{i=1}^k 2^i)\\
    &=& O(2^k m^2 2^k)\\
    &=& O(2^{2k} m^2)
@@ -57,57 +59,57 @@
   
   D'où $C(N,m) = O(N^2m^2)$, ce qui se prolonge pour toute valeur de $N$, puisque le cas d'un arbre complet est celui pour lequel le plus de multiplications sont nécessaires.
   
-  Et si $CM(m) = O(mlog(m)log(log(m)))$ :
+  Et si $CM(m) = O(m\log(m)\log(\log(m)))$~:
   \begin{eqnarray*}
-   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}mlog(2^{i-1}m)log(log(2^{i-1}m)))\\
-   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(log(m)+i-1)log(log(m)+i-1)\\
-   &\leq& \alpha 2^k m log(log(m)+k)(k log(m) + \frac{k-1}{2}*k\\
-   &\leq& \alpha 2^k m log(log(m)+k)(klog(m)+k^2)
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}m\log(2^{i-1}m)\log(\log(2^{i-1}m)))\\
+   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(\log(m)+i-1)\log(\log(m)+i-1))\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k \log(m) + \frac{k-1}{2}*k)\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k\log(m)+k^2)
   \end{eqnarray*}
   
-  D'où $C(N) = O(Nmlog(N)log(Nm)log(log(Nm)))$.
+  D'où $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$.
   
-  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes : $log(N)log(Nm)log(log(Nm))$.
+  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes~: $\log(N)\log(Nm)\log(\log(Nm))$.
 
 
-  \subsection{Construction de l'ardre des restes}
+  \subsection{Construction de l'arbre des restes}
   On construit alors l'arbre des restes (on peut décider de ne construire que ses feuilles, nous avons implémenté les deux versions) en faisant un parcours en profondeur de l'arbre des produit et en calculant le reste à chaque étape.
   
   \subsection{Complexité de la construction de l'arbre des restes}
-  On reprends les même notations que précedemment et on suppose à nouveaux que $N$ est de la forme $2^k$, avec $k\in\mathbf{N}$.
-  On observe tout d'abord que pour la construction de l'arbre des restes, on fait une division euclidienne par noeud de l'arbre, ainsi qu'une multiplcation (qu'on néglige dans le calcul de la complexité, puisque celà revient à modifier la constante devant la complexité de la division) pour obtenir le diviseur. Celui-ci est le carré d'un nombre de l'étage $i$ de l'arbre des produits si on est en train de construire l'étage $i$ de l'arbre des restes, il a donc au plus $2x2^{i-1}m$ chiffres. Les restes de l'étage $i$ ont donc au plus $2^im$ chiffres.
-  Lors du calcul d'un reste de l'étage $i$, on divise donc un nombre d'au plus $2^{i+1}m$ chiffre par un nombre en ayant au plus $2^im$, ce qui se fait donc en complxité $CD(2^{i+1}m)$, et il y a $2^{k-i}$ divisions à faire par étage.
+  On reprends les même notations que précédemment et on suppose à nouveaux que $N$ est de la forme $2^k$, avec $k\in\mathbf{N}$.
+  On observe tout d'abord que pour la construction de l'arbre des restes, on fait une division euclidienne par nœud de l'arbre, ainsi qu'une multiplication (qu'on néglige dans le calcul de la complexité, puisque cela revient à modifier la constante devant la complexité de la division) pour obtenir le diviseur. Celui-ci est le carré d'un nombre de l'étage $i$ de l'arbre des produits si on est en train de construire l'étage $i$ de l'arbre des restes, il a donc au plus $2 \times 2^{i-1}m$ chiffres. Les restes de l'étage $i$ ont donc au plus $2^i m$ chiffres.
+  Lors du calcul d'un reste de l'étage $i$, on divise donc un nombre d'au plus $2^{i+1}m$ chiffre par un nombre en ayant au plus $2^i m$, ce qui se fait donc en complexité $CD(2^{i+1}m)$, et il y a $2^{k-i}$ divisions à faire par étage.
   
-  D'où une complexité totale : $C(2^k, m) = \sum_{i=0}^{k-1}2^{k-i}CD(2^{i+1}m)$.
+  D'où une complexité totale~: $C(2^k, m) = \sum_{i=0}^{k-1}2^{k-i}CD(2^{i+1}m)$.
   
   On retrouve à une constante près l'expression obtenue pour le calcul de la complexité de la construction de l'arbre des produits, le résultat est donc identique.
-  On a donc :
+  On a donc~:
   \[
    C(N,m) = O(N^2m^2) \text{ si } CD(m) = O(m^2)
   \]
   et
   \[
-   C(N) = O(Nmlog(N)log(Nm)log(log(Nm))) \text{ si } CD(m) = O(mlog(m)log(log(m)))
+   C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm))) \text{ si } CD(m) = O(m\log(m)\log(\log(m)))
   \]
   
   \subsection{Preuve de l'algorithme}
   Nous allons maintenant prouver l'algorithme, afin de montrer qu'il nous permet bien de trouver des facteurs communs.
   Ceci va nous permettre de mettre en évidence l'une de ses limitations, qui empêche de factoriser immédiatement certaines clés.
   
-  Nous appelerons ici $r_i$ une feuille de l'arbre des restes, $p_i$ la feuille corespondante de l'arbre des produits, et $S$ le produit de toutes les clés, c'est à dire la racine de l'arbre des produits.
-  Par construction de l'arbre des restes, on a donc : $r_i = S \text{ mod } pi^2$.
+  Nous appellerons ici $r_i$ une feuille de l'arbre des restes, $p_i$ la feuille correspondante de l'arbre des produits, et $S$ le produit de toutes les clés, c'est à dire la racine de l'arbre des produits.
+  Par construction de l'arbre des restes, on a donc~: $r_i = S \mod pi^2$.
   
-  Montrons tout d'abord qu'un diviseur premier de $x := pgcd(r_i/p_i,p_i)$ est toujours un facteur commun entre $y$ et une autre clé, si $r_i$ est non nul. Par définition de $r_i$, $p_i^2$ ne divise pas $r_i$ et donc $p_i$ divise ne divise pas $r_i/p_i$. Donc un diviseur du pgcd $x$, s'il est strictement supérieur à $1$, ne peut provenir que d'un autre facteur de $S$ que $p_i$. Mais il divise aussi $p_i$, c'est donc bien un facteur commun.
+  Montrons tout d'abord qu'un diviseur premier de $x~:= pgcd(r_i/p_i,p_i)$ est toujours un facteur commun entre $y$ et une autre clé, si $r_i$ est non nul. Par définition de $r_i$, $p_i^2$ ne divise pas $r_i$ et donc $p_i$ divise ne divise pas $r_i/p_i$. Donc un diviseur du pgcd $x$, s'il est strictement supérieur à $1$, ne peut provenir que d'un autre facteur de $S$ que $p_i$. Mais il divise aussi $p_i$, c'est donc bien un facteur commun.
   
   Montrons maintenant que si $p_i$ a un facteur en commun avec une autre clef, alors ce facteur divise $x$. Notons $y$ ce facteur commun. On peut donc écrire $S$ sous la forme $S = y^2*P$. Donc, $y^2$ divise $S$ et $p_i^2$, donc $r_i$.
   Donc $y$ divise $p_i$ et $r_i/p_i$ ($p_i$ est différent de $y^2$ pour une clef RSA), c'est donc un diviseur commun.
   Supposons qu'il ne divise pas le pgcd. Il existe donc un autre facteur commun entre $p_i$ et une autre clé, et on a donc trouvé la factorisation de $p_i$. Mais alors, $S$ est un multiple de $p_i^2$, donc $r_i$ est nul et $x = p_i$, ce qui est absurde, puisque on n'avait supposé le contraire. Donc $y$ divise bien $x$.
   
-  On a donc justifié l'algorithme dans le sens ou on a montré les diviseurs premiers du pgcd sont exactement les facteurs communs entre $p_i$ les autres clés. Si pgcd est égal à $1$ ou est premier, on peut donc conclure : soit il n'y a pas de facteur commun, soit on récupère la factorisation de $p_i$ à partir du facteur obtenu. Mais si le pgcd n'est pas premier (et est donc égal à $p_i$), on en revient au problème initial.
+  On a donc justifié l'algorithme dans le sens ou on a montré les diviseurs premiers du pgcd sont exactement les facteurs communs entre $p_i$ les autres clés. Si pgcd est égal à $1$ ou est premier, on peut donc conclure~: soit il n'y a pas de facteur commun, soit on récupère la factorisation de $p_i$ à partir du facteur obtenu. Mais si le pgcd n'est pas premier (et est donc égal à $p_i$), on en revient au problème initial.
   
    \subsection{Le \og{}cas des zéros\fg}
   
-  Ce problème se rencontre quand les deux facteurs de $p_i$ sont paragé avec d'autres clés. On a alors $p_i^2 | S$, et donc $r_i = 0$. Deux cas peuvent se présenter : soit on a un \og cycle \fg{} de clés partageant des facteur, du type $ab - bc - ca$ et on ne peut alors récupérer aucune information sur les facteurs de ces clés, soit on a simplement une \og chaine \fg, du type $ab - bc - cd$. Dans ce cas, on peut récupérer tout les facteurs premiers, mais on ne connaitra pas la décomposition de $bc$, qu'il faudra déterminer ensuite.
+   Ce problème se rencontre quand les deux facteurs de $p_i$ sont partagés avec d'autres clés. On a alors $p_i^2 | S$, et donc $r_i = 0$. Deux cas peuvent se présenter~: soit on a un \og{} cycle \fg{} de clés partageant des facteur, du type $ab - bc - ca$ et on ne peut alors récupérer aucune information sur les facteurs de ces clés, soit on a simplement une \og{} chaine \fg, du type $ab - bc - cd$. Dans ce cas, on peut récupérer tout les facteurs premiers, mais on ne connaitra pas la décomposition de $bc$, qu'il faudra déterminer ensuite.
   
   Pour factoriser ces clés, qui partagent des facteurs communs mais ne sont pas factorisable par l'algorithme de l'arbre des restes, nous calculons donc l'ensemble des pgcd entre les clés ayant données un reste nul et les clefs dont le pgcd était différent de $1$ (et qui ont donc un facteur commun). Cette méthode a une complexité quadratique en le nombre de clef dans le pire des cas, ou toutes les clés feraient partie de cycle. En pratique, étant donné le faible nombre de clés présentes dans des cycles, cette méthode reste efficace.
   
