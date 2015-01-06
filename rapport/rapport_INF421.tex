@@ -81,7 +81,35 @@
   D'où une complexité totale : $C(2^k, m) = \sum_{i=0}^{k-1}2^{k-i}CD(2^{i+1}m)$.
   
   On retrouve à une constante près l'expression obtenue pour le calcul de la complexité de la construction de l'arbre des produits, le résultat est donc identique.
-  On a donc $C(N,m) = O(N^2m^2)$ si $CD(m) = O(m^2)$ et $C(N) = O(Nmlog(N)log(Nm)log(log(Nm)))$ si $CD(m) = O(mlog(m)log(log(m)))$.
+  On a donc :
+  \[
+   C(N,m) = O(N^2m^2) \text{ si } CD(m) = O(m^2)
+  \]
+  et
+  \[
+   C(N) = O(Nmlog(N)log(Nm)log(log(Nm))) \text{ si } CD(m) = O(mlog(m)log(log(m)))
+  \]
+  
+  \subsection{Preuve de l'algorithme}
+  Nous allons maintenant prouver l'algorithme, afin de montrer qu'il nous permet bien de trouver des facteurs communs.
+  Ceci va nous permettre de mettre en évidence l'une de ses limitations, qui empêche de factoriser immédiatement certaines clés.
+  
+  Nous appelerons ici $r_i$ une feuille de l'arbre des restes, $p_i$ la feuille corespondante de l'arbre des produits, et $S$ le produit de toutes les clés, c'est à dire la racine de l'arbre des produits.
+  Par construction de l'arbre des restes, on a donc : $r_i = S \text{ mod } pi^2$.
+  
+  Montrons tout d'abord qu'un diviseur premier de $x := pgcd(r_i/p_i,p_i)$ est toujours un facteur commun entre $y$ et une autre clé, si $r_i$ est non nul. Par définition de $r_i$, $p_i^2$ ne divise pas $r_i$ et donc $p_i$ divise ne divise pas $r_i/p_i$. Donc un diviseur du pgcd $x$, s'il est strictement supérieur à $1$, ne peut provenir que d'un autre facteur de $S$ que $p_i$. Mais il divise aussi $p_i$, c'est donc bien un facteur commun.
+  
+  Montrons maintenant que si $p_i$ a un facteur en commun avec une autre clef, alors ce facteur divise $x$. Notons $y$ ce facteur commun. On peut donc écrire $S$ sous la forme $S = y^2*P$. Donc, $y^2$ divise $S$ et $p_i^2$, donc $r_i$.
+  Donc $y$ divise $p_i$ et $r_i/p_i$ ($p_i$ est différent de $y^2$ pour une clef RSA), c'est donc un diviseur commun.
+  Supposons qu'il ne divise pas le pgcd. Il existe donc un autre facteur commun entre $p_i$ et une autre clé, et on a donc trouvé la factorisation de $p_i$. Mais alors, $S$ est un multiple de $p_i^2$, donc $r_i$ est nul et $x = p_i$, ce qui est absurde, puisque on n'avait supposé le contraire. Donc $y$ divise bien $x$.
+  
+  On a donc justifié l'algorithme dans le sens ou on a montré les diviseurs premiers du pgcd sont exactement les facteurs communs entre $p_i$ les autres clés. Si pgcd est égal à $1$ ou est premier, on peut donc conclure : soit il n'y a pas de facteur commun, soit on récupère la factorisation de $p_i$ à partir du facteur obtenu. Mais si le pgcd n'est pas premier (et est donc égal à $p_i$), on en revient au problème initial.
+  
+   \subsection{Le \og{}cas des zéros\fg}
+  
+  Ce problème se rencontre quand les deux facteurs de $p_i$ sont paragé avec d'autres clés. On a alors $p_i^2 | S$, et donc $r_i = 0$. Deux cas peuvent se présenter : soit on a un \og cycle \fg{} de clés partageant des facteur, du type $ab - bc - ca$ et on ne peut alors récupérer aucune information sur les facteurs de ces clés, soit on a simplement une \og chaine \fg, du type $ab - bc - cd$. Dans ce cas, on peut récupérer tout les facteurs premiers, mais on ne connaitra pas la décomposition de $bc$, qu'il faudra déterminer ensuite.
+  
+  Pour factoriser ces clés, qui partagent des facteurs communs mais ne sont pas factorisable par l'algorithme de l'arbre des restes, nous calculons donc l'ensemble des pgcd entre les clés ayant données un reste nul et les clefs dont le pgcd était différent de $1$ (et qui ont donc un facteur commun). Cette méthode a une complexité quadratique en le nombre de clef dans le pire des cas, ou toutes les clés feraient partie de cycle. En pratique, étant donné le faible nombre de clés présentes dans des cycles, cette méthode reste efficace.
   
 
 \section{Multiplication et pgcd rapides}
