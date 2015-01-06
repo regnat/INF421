@@ -30,11 +30,12 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   Deux calculs sur cinq cent et mille clés nécessitent respectivement 11 et 41 secondes, ce qui confirme la complexité quadratique.
 \section{Arbres des produits et des restes}
 
-  \subsection{Construction de l'arbre des produits}
+  \subsection{Arbre des produits}
+  \subsubsection{Construction de l'arbre des produits}
   On construit l'arbre à partir des feuilles de manière simple en utilisant une file. On insère les feuilles dans cette dernière, et tant qu'elle contient plus d'un élément, on retire les deux éléments en têtes, on les réunit dans un même sous-arbre que l'on ajoute à la file.
   L'algorithme termine bien puisque le nombre d'éléments dans la pile diminue strictement à chaque itération. Il est juste grâce à l'invariant~: à tout instant, la file ne contient que des arbres produits dont les feuilles sont les éléments initiaux.
   
-  \subsection{Complexité de la construction de l'arbre des produits}
+  \subsubsection{Complexité de la construction de l'arbre des produits\label{sn:complexite_arb_prod}}
   Nous avons en entrée $N$ clés, ayant au plus $m$ chiffres.
   On ne calculera la complexité qu'en nombre de multiplications, cette opération étant la plus représentative de la construction de l'arbre des produits.
   Supposons que le nombre $N$ de clés en entrée est de la forme $2^k$, avec $k\in\mathbf{N}$.
@@ -59,23 +60,13 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   
   D'où $C(N,m) = O(N^2m^2)$, ce qui se prolonge pour toute valeur de $N$, puisque le cas d'un arbre complet est celui pour lequel le plus de multiplications sont nécessaires.
   
-  Et si $CM(m) = O(m\log(m)\log(\log(m)))$~:
-  \begin{eqnarray*}
-   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}m\log(2^{i-1}m)\log(\log(2^{i-1}m)))\\
-   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(\log(m)+i-1)\log(\log(m)+i-1))\\
-   &\leq& \alpha 2^k m \log(\log(m)+k)(k \log(m) + \frac{k-1}{2}*k)\\
-   &\leq& \alpha 2^k m \log(\log(m)+k)(k\log(m)+k^2)
-  \end{eqnarray*}
-  
-  D'où $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$.
-  
-  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes~: $\log(N)\log(Nm)\log(\log(Nm))$.
 
 
-  \subsection{Construction de l'arbre des restes}
+  \subsection{Arbre des restes}
+  \subsubsection{Construction de l'arbre des restes}
   On construit alors l'arbre des restes (on peut décider de ne construire que ses feuilles, nous avons implémenté les deux versions) en faisant un parcours en profondeur de l'arbre des produit et en calculant le reste à chaque étape.
   
-  \subsection{Complexité de la construction de l'arbre des restes}
+  \subsubsection{Complexité de la construction de l'arbre des restes\label{sn:complexite_arb_rst}}
   On reprends les même notations que précédemment et on suppose à nouveaux que $N$ est de la forme $2^k$, avec $k\in\mathbf{N}$.
   On observe tout d'abord que pour la construction de l'arbre des restes, on fait une division euclidienne par nœud de l'arbre, ainsi qu'une multiplication (qu'on néglige dans le calcul de la complexité, puisque cela revient à modifier la constante devant la complexité de la division) pour obtenir le diviseur. Celui-ci est le carré d'un nombre de l'étage $i$ de l'arbre des produits si on est en train de construire l'étage $i$ de l'arbre des restes, il a donc au plus $2 \times 2^{i-1}m$ chiffres. Les restes de l'étage $i$ ont donc au plus $2^i m$ chiffres.
   Lors du calcul d'un reste de l'étage $i$, on divise donc un nombre d'au plus $2^{i+1}m$ chiffre par un nombre en ayant au plus $2^i m$, ce qui se fait donc en complexité $CD(2^{i+1}m)$, et il y a $2^{k-i}$ divisions à faire par étage.
@@ -86,10 +77,6 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   On a donc~:
   \[
    C(N,m) = O(N^2m^2) \text{ si } CD(m) = O(m^2)
-  \]
-  et
-  \[
-   C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm))) \text{ si } CD(m) = O(m\log(m)\log(\log(m)))
   \]
   
   \subsection{Preuve de l'algorithme}
@@ -117,5 +104,23 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   Une boucle en shell permet ensuite de teste toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssh. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! fit-il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
 
 \section{Multiplication et pgcd rapides}
+\subsection{Complexité de la construction de l'arbre des produits}
+Dans le cas où $CM(m) = O(m\log(m)\log(\log(m)))$, les calculs du~\ref{sn:complexite_arb_prod} deviennent~:
+  \begin{eqnarray*}
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}m\log(2^{i-1}m)\log(\log(2^{i-1}m)))\\
+   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(\log(m)+i-1)\log(\log(m)+i-1))\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k \log(m) + \frac{k-1}{2}*k)\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k\log(m)+k^2)
+  \end{eqnarray*}
+  
+  D'où $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$.
+  
+  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes~: $\log(N)\log(Nm)\log(\log(Nm))$.
 
+  \subsection{Complexité de la construction de l'arbre des restes}
+  Pour $CD(m) = O(m\log(m)\log(\log(m)))$
+  \[
+   C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))
+  \]
+  
 \end{document}
