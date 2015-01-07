@@ -5,9 +5,6 @@
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.io.FileWriter;
-import java.util.Scanner;
-import java.nio.file.Paths;
 import java.lang.String;
 import java.util.HashSet;
 import java.util.Set;
