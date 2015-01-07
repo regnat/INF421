@@ -4,17 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 
-
+/**
+ * <b>Found the weak keys thanks to product and leftover trees</b>
+ * Contains the functions that find the common factors in keys
+ * using the algorithm based on product tree.
+ *
+ */
 public class FindWeakKeysByProductTrees {
 
+	/**
+	 * Filename of the output
+	 * Weak keys and their factors will be written here
+	 * Syntax : x == a x b
+	 */
   static String outFile = "weakKeys.txt";
+  
   /**
-   * 
    * Looks for the common factor of keys in "keys"
    * Uses product and leftover trees
    * Can't find a common factor in cases such as : ab / bc / ca, ie when "cycle" of factors
-   * Return a set (we don't want twice the same factor...
-   * 
+   * @see FindWeakKeysByProductTrees#FindWeakKeysList(LinkedList)
+   * @see FindWeakKeysByProductTrees#solveLeftoverTree(LinkedList, ProductTree, BigIntTree)
+   * @param keys
+   * 		List of the keys that might share common factors
+   * @return List of the common factors
    */
   public static LinkedList<BigInteger> FindWeakKeysTree(LinkedList<BigInteger> keys){
 
@@ -35,10 +48,17 @@ public class FindWeakKeysByProductTrees {
 
     return factors;
   }
-
+  
   /**
    * Recursive auxiliary function wrapped in FindWeakKeysTree.
-   * Depth first walk in the two trees in order to get the gcd.
+   * Depth first walk in the two trees in order to compute gcds and find commons factors according to the project's algorithm.
+   * @see FindWeakKeysByProductTrees#FindWeakKeysTree(LinkedList)
+   * @param factors
+   * 			Buffer storing the factors already found.
+   * @param pTree
+   * 			The product tree build whose leaf are the keys.
+   * @param lTree
+   * 			The leftover tree build from the product tree pTree
    */
   private static void solveLeftoverTree(LinkedList<BigInteger> factors, ProductTree pTree, BigIntTree lTree){
 
@@ -62,11 +82,20 @@ public class FindWeakKeysByProductTrees {
 
   /**
    * 
-   * Looks for the common factor of keys in "keys"
-   * Uses product trees and leftover list (save memory)
-   * Can't find a common factor in cases such as : ab / bc / ca, ie when "cycle" of factors
+   * 
    * Return a set (we don't want twice the same factor...
    * 
+   */
+  
+  /**
+   * Looks for the common factor of keys in "keys"
+   * Uses product trees and leftover list (in order to save memory)
+   * Can't find a common factor in cases such as : ab / bc / ca, ie when it exists a "cycle" of factors
+   * @see FindWeakKeysByProductTrees#FindWeakKeysTree(LinkedList)
+   * @see FindWeakKeysByProductTrees#computeFactors(HashMap, ProductTree, LinkedList)
+   * @param keys
+   * 		List of the keys that might share common factors
+   * @return List of the common factors
    */
   public static HashMap<BigInteger, BigInteger> FindWeakKeysList(LinkedList<BigInteger> keys){
 
@@ -114,6 +143,18 @@ public class FindWeakKeysByProductTrees {
    * Depth first walk in pTree in order to get the gcd with the corresponding rest of lList.
    * Warning : modify (destroy, actually) lList
    */
+  
+  /**
+   * Recursive auxiliary function wrapped in FindWeakKeys.
+   * Depth first walk in pTree in order to get the gcd with the corresponding rest of lList.
+   * Warning : modify (destroy, actually) the list of leftovers.
+   * @param factors
+   * 			The list of the couples keys/factors already found. 
+   * @param pTree
+   * 			The product tree build whose leaf are the keys.
+   * @param lList
+   * 			The list of leftovers computed from the product tree.
+   */
   private static void computeFactors(HashMap<BigInteger, BigInteger> factors, ProductTree pTree, LinkedList<BigInteger> lList){
 
     //Depth first walk in pTree
@@ -132,6 +173,7 @@ public class FindWeakKeysByProductTrees {
     }
   }
 
+  
   public static void main(String[] args) {
 
     String path = "./files/keys100.txt";

@@ -6,9 +6,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
- * The class used to generate te keys.
- * @author Theophane Hufschmitt
- * @version 0.0
+ * <b>The class used to generate te keys.</b>
  */
 final class genKeys {
 
@@ -50,7 +48,7 @@ final class genKeys {
     }
 
 /**
- * generage the asn1 file corresponding to th egiven key
+ * generate the asn1 file corresponding to th egiven key
  * @param n the public key
  * @param p the first factor of n
  * @param q the second factor of n
