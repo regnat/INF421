@@ -18,16 +18,16 @@
 
 \maketitle
 
-\begin{abstract}
-
-\end{abstract}
-
 \section{Mise en place~: une implémentation jouet de RSA}
-En factorisant à la main la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier \texttt{minisecret.txt} ().
+En factorisant à l'aide d'un logiciel de calcul formel la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier \texttt{minisecret.txt}, en utlisant openssh pour générer la clef priver et déchiffrer le fichier.
+
+
 \section{Recherche naïve~: algorithme d'Euclide et exploration paire par paire}
 Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble des clés vulnérables, et pour chacune un de leurs coefficients, ce qui nécessite un calcul de $\frac{n(n-1)}{2}$ pgcds (soit une complexité quadratique en le nombre de clés).
 
   Deux calculs sur cinq cent et mille clés nécessitent respectivement 11 et 41 secondes, ce qui confirme la complexité quadratique.
+  
+  
 \section{Arbres des produits et des restes}
 
   \subsection{Arbre des produits}
@@ -60,7 +60,17 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   
   D'où $C(N,m) = O(N^2m^2)$, ce qui se prolonge pour toute valeur de $N$, puisque le cas d'un arbre complet est celui pour lequel le plus de multiplications sont nécessaires.
   
-
+  Dans le cas où $CM(m) = O(m\log(m)\log(\log(m)))$, les calculs du~\ref{sn:complexite_arb_prod} deviennent~:
+  \begin{eqnarray*}
+   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}m\log(2^{i-1}m)\log(\log(2^{i-1}m)))\\
+   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(\log(m)+i-1)\log(\log(m)+i-1))\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k \log(m) + \frac{k-1}{2}*k)\\
+   &\leq& \alpha 2^k m \log(\log(m)+k)(k\log(m)+k^2)
+  \end{eqnarray*}
+  
+  D'où $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$.
+  
+  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes~: $\log(N)\log(Nm)\log(\log(Nm))$.
 
   \subsection{Arbre des restes}
   \subsubsection{Construction de l'arbre des restes}
@@ -75,9 +85,18 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   
   On retrouve à une constante près l'expression obtenue pour le calcul de la complexité de la construction de l'arbre des produits, le résultat est donc identique.
   On a donc~:
+  
+  Pour $CD(m) = O(m^2)$
   \[
-   C(N,m) = O(N^2m^2) \text{ si } CD(m) = O(m^2)
+   C(N,m) = O(N^2m^2)
   \]
+  
+  Pour $CD(m) = O(m\log(m)\log(\log(m)))$
+  \[
+   C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))
+  \]
+  
+  Comme précédemment, on observe une nette baisse de la compexité.
   
   \subsection{Preuve de l'algorithme}
   Nous allons maintenant prouver l'algorithme, afin de montrer qu'il nous permet bien de trouver des facteurs communs.
@@ -100,27 +119,41 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
   
   Pour factoriser ces clés, qui partagent des facteurs communs mais ne sont pas factorisable par l'algorithme de l'arbre des restes, nous calculons donc l'ensemble des pgcd entre les clés ayant données un reste nul et les clefs dont le pgcd était différent de $1$ (et qui ont donc un facteur commun). Cette méthode a une complexité quadratique en le nombre de clef dans le pire des cas, ou toutes les clés feraient partie de cycle. En pratique, étant donné le faible nombre de clés présentes dans des cycles, cette méthode reste efficace.
   
-  \subsection{Déchiffrage du message}
-  Une boucle en shell permet ensuite de teste toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssh. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! fit-il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
+  \section{Oraganisation et implémentation du déchiffrement}
+  Nous avons utilisé plusieurs classes afin d'organiser et cloisonner correctement notre code. Nous allons ici faire un rapide résumé de leur organisation. Plus de détails sur leur contenu peuvent être trouvé à travers les commentaires présent dans le code et dans la documentation jointe.
+  
+  Tout d'abord, une première classe est chargée de parser le fichier contenant les clés qui seront alors stockée dans une LinkedList.
+  On va alors pouvoir faire appel à la fonction de recherche des facteur commun (présente, avec ses dépendances, dans la classe FindWeakKeysByProductTree). Elle va construire l'arbre des produits, puis l'arbre des restes (on ne construira en fait que les feuilles de ce dernier, les valeurs des noeuds n'étant pas utiles), à l'aide de la classe ProductTree. Puis on va rechercher les facteurs communs, tout d'abord grace à l'algorithme présenté par le sujet, puis, pour les clefs présentant un reste nul, en calculant leur pgcd avec toutes les clés partageant des facteurs (c'est à dire toutes les clefs pour lesquelles on a pas trouvé un pgcd de 1 lors de l'algorithme précédent.)
+  Cette étape peut, dans le pire des cas, présenter une complexité quadratique, mais elle n'est pas un problème en pratique, étant donné le faible nombre de clés ayant des facteurs communs.
+  Enfin, les clefs et leurs facteurs sont écrits dans un fichier \texttt{weakKeys.txt}.
+  
+  La classe genKeys va alors prendre ce fichier en entré et générer l'ensemble des clés privées (un fichier par clef).
+  
+  Une boucle en shell (fichier \texttt{testKeys.sh}) permet ensuite de tester toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssh. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! fit-il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
 
 \section{Multiplication et pgcd rapides}
-\subsection{Complexité de la construction de l'arbre des produits}
-Dans le cas où $CM(m) = O(m\log(m)\log(\log(m)))$, les calculs du~\ref{sn:complexite_arb_prod} deviennent~:
-  \begin{eqnarray*}
-   C(2^k,m) &=& \sum_{i=1}^k 2^{k-i}O(2^{i-1}m\log(2^{i-1}m)\log(\log(2^{i-1}m)))\\
-   C(2k,m) &\leq& \alpha(m2^{k-1}\sum_{i=1}^k(\log(m)+i-1)\log(\log(m)+i-1))\\
-   &\leq& \alpha 2^k m \log(\log(m)+k)(k \log(m) + \frac{k-1}{2}*k)\\
-   &\leq& \alpha 2^k m \log(\log(m)+k)(k\log(m)+k^2)
-  \end{eqnarray*}
+  Nous avons testé notre code avec les versions 1.7 et 1.8 d'OpenJDK, ainsi qu'avec la librairie \texttt{bigint} optimisé proposé par le sujet. Les algorithmes optimisé proposé par cette bibliothèque on en effet été intégré dans OpenJDK8 pour la plupart, à l'exception de deux d'entre eux.
+  L'utilisation d'OpenJDK8 rend ainsi l'execution de l'algorithme considérablement plus rapide, et on observe encore un gain de temps non négligeable, comme on peut l'oberver dans le tableau ci-dessous.
   
-  D'où $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$.
-  
-  Cette complexité est bien inférieure à la précédente, puisque un facteur $Nm$ est remplacé par une expression à base de logarithmes~: $\log(N)\log(Nm)\log(\log(Nm))$.
+  \begin{figure}[b]
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+   \hline
+   Nombre de clés & 100 & 1000 & 10000 & 10000\\
+   \hline
+   OpenJDK7 & nd & nd & nd & nd\\
+   \hline
+   OpenJDK8 & nd & nd & nd & nd\\
+   \hline
+   bigint & nd & nd & nd & nd\\
+   \hline
+  \end{tabular}
+  \caption{Durée d'exécution du programme selon les algorithmes de traitement des big integers utilisés.}
+  \end{center}
+  \end{figure}
 
-  \subsection{Complexité de la construction de l'arbre des restes}
-  Pour $CD(m) = O(m\log(m)\log(\log(m)))$
-  \[
-   C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))
-  \]
+
+
+
   
 \end{document}

@@ -176,7 +176,7 @@ public class FindWeakKeysByProductTrees {
   
   public static void main(String[] args) {
 
-    String path = "./files/keys100.txt";
+    String path = "./files/keys100000.txt";
     if (args.length > 0) {
       path = args[0];
     }
