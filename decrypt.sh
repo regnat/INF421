@@ -1,13 +1,14 @@
 #!/bin/sh
 
 # decrypt.sh
-# given a set of public key and a crypted file 
 
 usage () {
   cat <<EOF
-  Usage : $0 pubkeysFile cryptedMessage
+  Usage : $0 keysFile cryptedMessage
   
   Try to decrypt cryptedMessage using one of the keys in keysFile
+  where each line in keysFile is in the form
+  pubkey = firstFactor x secondFactor
 
 EOF
 }

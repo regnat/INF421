@@ -24,6 +24,14 @@ class FindWeakKeysByPGCD {
     }
   }
 
+  /**
+   * Compute gcds between elements of list1 and list2 to factorize elements of list1
+   *
+   * @param list1 the first list of integers
+   *
+   * @param list2 the second list of integers
+   *
+   * @return a map associating to each element of the first list on of his factors (if possible)
   static HashMap<BigInteger, BigInteger> computeGCDs(LinkedList<BigInteger> list1, LinkedList<BigInteger> list2) {
     HashMap<BigInteger, BigInteger> computedGcds = new HashMap<BigInteger, BigInteger>();
     for (BigInteger key1 : list1) {
@@ -38,6 +46,11 @@ class FindWeakKeysByPGCD {
     return computedGcds;
   }
 
+  /**
+   * Compute GCDs between all the keys in the given list to find common prime factors
+   *
+   * @param keysFile The list containing public keys
+   */
   static void FindWeakKeysByPGCD(LinkedList<BigInteger> keys) {
       LinkedList<BigInteger> keys2 = new LinkedList<BigInteger>(keys);
       BigInteger pgcd = null;
@@ -58,8 +71,11 @@ class FindWeakKeysByPGCD {
       System.out.println("Done.");
       System.out.println("Done.");
   }
+
   /**
-   * Compute GCDs between keys to find common prime factors
+   * Compute GCDs between all the keys in the given file to find common prime factors
+   *
+   * @param keysFile The file containing public keys
    */
   static void FindWeakKeysByPGCD(String keysFile) {
     try {

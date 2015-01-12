@@ -53,6 +53,12 @@ public class KeyWriter {
     }
   }
 
+  /**
+   * Empty a file
+   *
+   * @param outFile The file to empty
+   *
+   */
   public static void clear(String outFile) {
     try {
       FileWriter writer = new FileWriter(outFile, false);
