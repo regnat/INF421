@@ -22,7 +22,7 @@
 \maketitle
 
 \section{Mise en place~: une implémentation jouet de RSA}
-En factorisant à l'aide d'un logiciel de calcul formel la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier \texttt{minisecret.txt}, en utlisant openssh pour générer la clef priver et déchiffrer le fichier.
+En factorisant à l'aide d'un logiciel de calcul formel la clé \texttt{minisecret.pub}, on arrive à retrouver le contenu du fichier \texttt{minisecret.txt}, en utilisant openssl pour générer la clef priver et déchiffrer le fichier.
 
 
 \section{Recherche naïve~: algorithme d'Euclide et exploration paire par paire}
@@ -99,7 +99,7 @@ Des calculs sur différents nombres de clés permettent de confirmer cette compl
    C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))
   \]
   
-  Comme précédemment, on observe une nette baisse de la compexité.
+  Comme précédemment, on observe une nette baisse de la complexité.
   
   \subsection{Preuve de l'algorithme}
   Nous allons maintenant prouver l'algorithme, afin de montrer qu'il nous permet bien de trouver des facteurs communs.
@@ -122,21 +122,21 @@ Des calculs sur différents nombres de clés permettent de confirmer cette compl
   
   Pour factoriser ces clés, qui partagent des facteurs communs mais ne sont pas factorisable par l'algorithme de l'arbre des restes, nous calculons donc l'ensemble des pgcd entre les clés ayant données un reste nul et les clefs dont le pgcd était différent de $1$ (et qui ont donc un facteur commun). Cette méthode a une complexité quadratique en le nombre de clef dans le pire des cas, ou toutes les clés feraient partie de cycle. En pratique, étant donné le faible nombre de clés présentes dans des cycles, cette méthode reste efficace.
   
-  \section{Oraganisation et implémentation du déchiffrement}
+  \section{Organisation et implémentation du déchiffrement}
   Nous avons utilisé plusieurs classes afin d'organiser et cloisonner correctement notre code. Nous allons ici faire un rapide résumé de leur organisation. Plus de détails sur leur contenu peuvent être trouvé à travers les commentaires présent dans le code et dans la documentation jointe.
   
   Tout d'abord, une première classe est chargée de parser le fichier contenant les clés qui seront alors stockée dans une LinkedList.
-  On va alors pouvoir faire appel à la fonction de recherche des facteur commun (présente, avec ses dépendances, dans la classe FindWeakKeysByProductTree). Elle va construire l'arbre des produits, puis l'arbre des restes (on ne construira en fait que les feuilles de ce dernier, les valeurs des noeuds n'étant pas utiles), à l'aide de la classe ProductTree. Puis on va rechercher les facteurs communs, tout d'abord grace à l'algorithme présenté par le sujet, puis, pour les clefs présentant un reste nul, en calculant leur pgcd avec toutes les clés partageant des facteurs (c'est à dire toutes les clefs pour lesquelles on a pas trouvé un pgcd de 1 lors de l'algorithme précédent.)
+  On va alors pouvoir faire appel à la fonction de recherche des facteur commun (présente, avec ses dépendances, dans la classe FindWeakKeysByProductTree). Elle va construire l'arbre des produits, puis l'arbre des restes (on ne construira en fait que les feuilles de ce dernier, les valeurs des nœuds n'étant pas utiles), à l'aide de la classe ProductTree. Puis on va rechercher les facteurs communs, tout d'abord grâce à l'algorithme présenté par le sujet, puis, pour les clefs présentant un reste nul, en calculant leur pgcd avec toutes les clés partageant des facteurs (c'est à dire toutes les clefs pour lesquelles on a pas trouvé un pgcd de 1 lors de l'algorithme précédent.)
   Cette étape peut, dans le pire des cas, présenter une complexité quadratique, mais elle n'est pas un problème en pratique, étant donné le faible nombre de clés ayant des facteurs communs.
   Enfin, les clefs et leurs facteurs sont écrits dans un fichier \texttt{weakKeys.txt}.
   
   La classe genKeys va alors prendre ce fichier en entré et générer l'ensemble des clés privées (un fichier par clef).
   
-  Une boucle en shell (fichier \texttt{testKeys.sh}) permet ensuite de tester toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssh. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! fit-il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
+  Une boucle en shell (fichier \texttt{testKeys.sh}) permet ensuite de tester toutes les clés sur le fichier \texttt{bigsecret.txt} avec l'utilitaire openssl. On obtient ainsi le contenu du fichier \texttt{bigsecret.txt} («~Ouf~! Fit il, suant, las, mais satisfait, j'ai cru un instant n'y jamais aboutir.~»).
 
 \section{Multiplication et pgcd rapides}
   Nous avons testé notre code avec les versions 1.7 et 1.8 d'OpenJDK, ainsi qu'avec la librairie \texttt{bigint} optimisé proposé par le sujet. Les algorithmes optimisé proposé par cette bibliothèque on en effet été intégré dans OpenJDK8 pour la plupart, à l'exception de deux d'entre eux.
-  L'utilisation d'OpenJDK8 rend ainsi l'éxecution de l'algorithme considérablement plus rapide, et on observe encore un gain de temps non négligeable, comme on peut l'observer dans le tableau~\ref{tab:jdkVersions} page~\pageref{tab:jdkVersions}  ou sur la figure~\ref{fig:pTreeChart} page~\pageref{fig:pTreeChart}
+  L'utilisation d'OpenJDK8 rend ainsi l'exécution de l'algorithme considérablement plus rapide, et on observe encore un gain de temps non négligeable, comme on peut l'observer dans le tableau~\ref{tab:jdkVersions} page~\pageref{tab:jdkVersions}  ou sur la figure~\ref{fig:pTreeChart} page~\pageref{fig:pTreeChart}
   
 
 \appendix
@@ -168,7 +168,7 @@ Des calculs sur différents nombres de clés permettent de confirmer cette compl
       \toprule
       OpenJDK7 & 0.65 & 25.1 & nd & nd\\
       \midrule
-      OpenJDK8 & 0.6s & 6.6s & 2m9s & 63m\\
+      OpenJDK8 & 0.6s & 6.6s & 2m 9s & 63m\\
       \bottomrule
     \end{tabular}
     \caption{\label{tab:jdkVersions}Durée d'exécution du programme selon les algorithmes de traitement des big integers utilisés.}
