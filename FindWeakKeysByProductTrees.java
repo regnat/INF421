@@ -131,7 +131,7 @@ public class FindWeakKeysByProductTrees {
     System.out.println("Done.");
     System.out.print("--> Saving found prime factors to file " + outFile + "... ");
     factors.putAll(factorsAt0);
-    KeyWriter.addToWeakKeys(outFile, factors);
+    KeyWriter.genWeakKeysFile(outFile, factors);
     System.out.println("Done.");
 
     return factors;
@@ -180,7 +180,6 @@ public class FindWeakKeysByProductTrees {
     if (args.length > 0) {
       path = args[0];
     }
-    /* LinkedList<BigInteger> keys = keysFromFile(path); */
     try {
       LinkedList<BigInteger> keys = FileParser.parseKeysFile(path);
       HashMap<BigInteger, BigInteger> factors = FindWeakKeysList(keys);

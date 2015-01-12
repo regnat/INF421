@@ -44,6 +44,7 @@ class FindWeakKeysByPGCD {
       Set<BigInteger> knownWeakKeys = new HashSet<BigInteger>();
       System.out.println("Calculating the common factors... ");
       System.out.print("--> Computing GCDs...");
+      KeyWriter.clear(outFile);
       for (BigInteger key1 : keys) {
         keys2.poll();
         for (BigInteger key2 : keys2) {

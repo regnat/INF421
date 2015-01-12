@@ -53,6 +53,16 @@ public class KeyWriter {
     }
   }
 
+  public static void clear(String outFile) {
+    try {
+      FileWriter writer = new FileWriter(outFile, false);
+      writer.close();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Write a set of keys and factors in a file
    * @param outFile
@@ -60,7 +70,8 @@ public class KeyWriter {
    * @param couples
    * 			List of the couples keys/factor. The other factor is computed in the function.
    */
-  public static void addToWeakKeys(String outFile, HashMap<BigInteger, BigInteger> couples) {
+  public static void genWeakKeysFile(String outFile, HashMap<BigInteger, BigInteger> couples) {
+    clear(outFile);
     for (Map.Entry<BigInteger, BigInteger> couple : couples.entrySet()) {
       if (!couple.getValue().equals(BigInteger.ZERO) && !couple.getValue().equals(BigInteger.ONE)) {
         addToWeakKeys(outFile, couple.getKey(), couple.getValue());
