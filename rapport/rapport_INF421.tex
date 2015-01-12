@@ -7,6 +7,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{epstopdf}
 
 \usepackage[frenchb]{babel}
 
@@ -25,7 +28,7 @@ En factorisant à l'aide d'un logiciel de calcul formel la clé \texttt{minisecr
 \section{Recherche naïve~: algorithme d'Euclide et exploration paire par paire}
 Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble des clés vulnérables, et pour chacune un de leurs coefficients, ce qui nécessite un calcul de $\frac{n(n-1)}{2}$ pgcds (soit une complexité quadratique en le nombre de clés).
 
-  Deux calculs sur cinq cent et mille clés nécessitent respectivement 11 et 41 secondes, ce qui confirme la complexité quadratique.
+Des calculs sur différents nombres de clés permettent de confirmer cette complexité théorique (cf figure~\ref{fig:gcdSpeedChart} p.~\pageref{fig:gcdSpeedChart}).
   
   
 \section{Arbres des produits et des restes}
@@ -133,27 +136,43 @@ Une simple boucle sur tous les couples de clés permet de retrouver l'ensemble d
 
 \section{Multiplication et pgcd rapides}
   Nous avons testé notre code avec les versions 1.7 et 1.8 d'OpenJDK, ainsi qu'avec la librairie \texttt{bigint} optimisé proposé par le sujet. Les algorithmes optimisé proposé par cette bibliothèque on en effet été intégré dans OpenJDK8 pour la plupart, à l'exception de deux d'entre eux.
-  L'utilisation d'OpenJDK8 rend ainsi l'execution de l'algorithme considérablement plus rapide, et on observe encore un gain de temps non négligeable, comme on peut l'oberver dans le tableau ci-dessous.
+  L'utilisation d'OpenJDK8 rend ainsi l'éxecution de l'algorithme considérablement plus rapide, et on observe encore un gain de temps non négligeable, comme on peut l'observer dans le tableau~\ref{tab:jdkVersions} page~\pageref{tab:jdkVersions}  ou sur la figure~\ref{fig:pTreeChart} page~\pageref{fig:pTreeChart}
   
-  \begin{figure}[b]
+
+\appendix
+\section*{Appendices}
+\section{Procédure d'installation du programme}
+\begin{itemize}
+  \item Pour compiler et tester le programme avec le jeu de clés fourni~:
+    make
+
+  \item Pour compiler uniquement~:
+    make build
+\end{itemize}
+
+\section{Figures}
+\begin{figure}[ht]
+  \includegraphics[width=\textwidth]{img/gcdPlot}
+  \caption{\label{fig:gcdSpeedChart}Vitesses théorique et pratique de l'algorithme de recherche exhaustive du PGCD}
+\end{figure}
+\begin{figure}[ht]
+  \includegraphics[width=\textwidth]{img/pTreePlot}
+  \caption{\label{fig:pTreeChart}Vitesses théorique et pratique de l'algorithme de recherche par arbre}
+\end{figure}
+
+\begin{figure}[ht]
   \begin{center}
-  \begin{tabular}{|c|c|c|c|c|}
-   \hline
-   Nombre de clés & 100 & 1000 & 10000 & 10000\\
-   \hline
-   OpenJDK7 & nd & nd & nd & nd\\
-   \hline
-   OpenJDK8 & nd & nd & nd & nd\\
-   \hline
-   bigint & nd & nd & nd & nd\\
-   \hline
-  \end{tabular}
-  \caption{Durée d'exécution du programme selon les algorithmes de traitement des big integers utilisés.}
+    \begin{tabular}{ccccc}
+      \toprule
+      Nombre de clés & 100 & 1000 & 10000 & 10000\\
+      \toprule
+      OpenJDK7 & 0.65 & 25.1 & nd & nd\\
+      \midrule
+      OpenJDK8 & 0.6s & 6.6s & 2m9s & 63m\\
+      \bottomrule
+    \end{tabular}
+    \caption{\label{tab:jdkVersions}Durée d'exécution du programme selon les algorithmes de traitement des big integers utilisés.}
+    
   \end{center}
-  \end{figure}
-
-
-
-
-  
+\end{figure}
 \end{document}
