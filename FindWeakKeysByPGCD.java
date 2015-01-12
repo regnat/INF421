@@ -25,13 +25,14 @@ class FindWeakKeysByPGCD {
   }
 
   /**
-   * Compute gcds between elements of list1 and list2 to factorize elements of list1
+   * Compute gcds between elements of list1 and list2
    *
    * @param list1 the first list of integers
    *
    * @param list2 the second list of integers
    *
    * @return a map associating to each element of the first list on of his factors (if possible)
+   */
   static HashMap<BigInteger, BigInteger> computeGCDs(LinkedList<BigInteger> list1, LinkedList<BigInteger> list2) {
     HashMap<BigInteger, BigInteger> computedGcds = new HashMap<BigInteger, BigInteger>();
     for (BigInteger key1 : list1) {
