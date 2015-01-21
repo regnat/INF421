@@ -14,7 +14,9 @@
 
 \usepackage[frenchb]{babel}
 \usepackage{graphicx}
-% \usepackage{subfig}
+\usepackage{mathtools}
+\usepackage[]{algorithm2e}
+\usepackage{autoTitle}
 
 \title{À la recherche de clés secrètes vulnérables}
 \subtitle{PI02}
@@ -25,5 +27,42 @@
 \setbeamercovered{dynamic}
 \begin{frame}
   \maketitle
+\end{frame}
+
+\section{Calcul naïf de pgcd}
+\subsection{Justification théorique}
+\begin{frame}
+  \begin{block}{Principe des clés RSA}
+    \begin{itemize}
+      \item Clé privée~: Paire de grands nombres premiers $p$ et $q$
+      \item Clé publique~: Produit $n$ de $p$ et $q$
+      \item Factorisation de la clé publique très difficile
+    \end{itemize}
+  \end{block}
+  \begin{block}{Faiblesse}
+    \begin{itemize}
+      \item Très grande quantité de clés existantes
+      \item Risque de ``collision'' sur une des clés privées
+    \end{itemize}
+  \end{block}
+\end{frame}
+\subsection{Réalisation pratique}
+\begin{frame}
+  \begin{block}{Principe de l'algorithme}
+    \begin{itemize}
+      \item Simple itération sur chaque paire de clés en entrée
+      \item Requiert $\mathcal{O}(n^2)$ calculs de pgcd
+    \end{itemize}
+  \end{block}  
+  \begin{block}{Pseudo-code}
+    \begin{algorithm}[H]
+      \Entree{keys: Liste de clés publiques}
+      \Pour{key1, key2 $\in$ keys}{%
+        \Si{gcd (key1, key2)~!= 1 \&\& key1~!= key2}{%
+          ajouter (key1, key2, gcd) \tcc*{key1 et key2 sont factorisées}
+        }
+      }
+    \end{algorithm}
+  \end{block}
 \end{frame}
 \end{document}
