@@ -1,0 +1,16 @@
+graph G { 
+  rankdir=BT;
+  R0;
+  R11 [label="R(1,1)"];
+  R12 [label="R(1,2)"];
+  R21 [label="R(2,1)"];
+  R22 [label="R(2,2)"];
+  R23 [label="R(2,3)"];
+  R24 [label="R(2,4)"];
+  R11 -- R0;
+  R12 -- R0;
+  R21 -- R11;
+  R22 -- R11;
+  R23 -- R12;
+  R24 -- R12;
+} 
