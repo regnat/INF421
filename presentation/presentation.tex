@@ -70,4 +70,66 @@
 \begin{frame}
   \includegraphics{img/arbreProd}  
 \end{frame}
+
+\subsection{Complexité de construction}
+\begin{frame}
+  \begin{block}{Complexité de la construction de l'arbre des produits}
+  On numérote les étages de l'arbre de $0$ pour les feuilles à $k$ pour la racine. 
+   \begin{itemize}
+    \item Étage interne de l'arbre~: une multiplication par nœuds, soit $2^{k-i}$ multiplications.
+    \item Nombre de chiffres d'un nombre au niveau $k$~: double au plus à chaque niveau, soit $2^{i-1}m$ chiffres.
+    \item Au total~: $C(2^k,m) = \sum_{i=1}^k 2^{k-i}CM(2^{i-1}m)$
+   \end{itemize}
+  \end{block}
+  \begin{block}{Complexité de la construction de l'arbre des restes}
+    \begin{itemize}
+    \item Étage de l'arbre autre que le sommet~: une division par nœuds, soit $2^{k-i}$ divisions.
+    \item Nombre de chiffres d'un nombre au niveau $k$~: division par un nombre présent à l'étage d'en dessous dans l'arbre des produits, qui a donc $2^{i}m$ chiffres au plus. Donc le reste a $2^{i}m$ chiffres au plus.
+    \item Au total~: $C(2^k,m) = \sum_{i=0}^{k-1} 2^{k-i}CD(2^{i+1}m)$
+   \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+ \begin{block}{Comparaison des complexité selon la complexité des opérations}
+  Pour des opérations en temps~:
+  \begin{itemize}
+   \item quadratique~: $C(N,m) = O(N^2m^2)$
+   \item amélioré~: $C(N) = O(Nm\log(N)\log(Nm)\log(\log(Nm)))$
+  \end{itemize}
+ \end{block}
+ 
+ On gagne quasiment un ordre de grandeur.
+ 
+ \begin{figure}[ht]
+  \begin{center}
+    \begin{tabular}{ccccc}
+      \toprule
+      Nombre de clés & 100 & 1000 & 10000 & 10000\\
+      \toprule
+      OpenJDK7 & 0.65 & 25.1 & nd & nd\\
+      \midrule
+      OpenJDK8 & 0.6s & 6.6s & 2m 9s & 63m\\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{figure}
+\end{frame}
+
+
+\section{Obtention des facteurs communs}
+  
+\begin{frame}
+   À partir des feuilles de l'arbre des restes, on calcule $x = pgcd(r_i/p_i,pi)$.
+   \begin{block}
+   \begin{itemize}
+    \item Si $x=1$~: la clé ne partage aucun de ses facteurs.
+    \item Si $x \leq 1$~: la clé a un unique facteur commun, qui vaut $x$.
+    \item Si $x=0$~: la clé a ses deux facteurs en commun, mais on ne peux pas avoir d'informations dessus.
+   \end{itemize}
+   \end{block}
+
+   Pour factoriser ces clés, nous sommes alors passé à nouveau par un calcul de pgcd naïf entre les clés partageant deux facteurs et les clés en partageant au moins un.
+\end{frame}
+
 \end{document}
