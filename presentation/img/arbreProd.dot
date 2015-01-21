@@ -1,0 +1,8 @@
+graph G { 
+  k1k2 -- k1;
+  k1k2 -- k2;
+  k3k4 -- k3;
+  k3k4 -- k4;
+  k1k2k3k4 -- k1k2;
+  k1k2k3k4 -- k3k4;
+} 
